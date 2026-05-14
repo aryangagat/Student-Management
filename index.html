@@ -1,0 +1,786 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Student Management System</title>
+<style>
+ *{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:'Poppins',sans-serif;
+}
+
+body{
+  background:linear-gradient(135deg,#dbeafe,#eff6ff,#e0e7ff);
+  overflow-x:hidden;
+  min-height:100vh;
+}
+
+/* HEADER */
+
+header{
+  background:linear-gradient(135deg,#1e3a8a,#2563eb,#3b82f6);
+  color:white;
+  padding:20px 35px;
+  position:sticky;
+  top:0;
+  z-index:1000;
+  box-shadow:0 6px 25px rgba(0,0,0,0.2);
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  position:relative;
+  backdrop-filter:blur(10px);
+}
+
+header h1{
+  font-size:34px;
+  letter-spacing:1px;
+  font-weight:700;
+  text-shadow:0 3px 10px rgba(0,0,0,0.2);
+}
+
+/* MENU ICON */
+
+.menu-icon{
+  font-size:38px;
+  cursor:pointer;
+  transition:0.4s ease;
+
+  position:absolute;
+  right:35px;
+}
+
+.menu-icon:hover{
+  transform:rotate(90deg) scale(1.1);
+  color:#bfdbfe;
+}
+
+/* SIDEBAR */
+
+.sidebar{
+  width:310px;
+  height:100vh;
+  background:linear-gradient(180deg,#1e293b,#0f172a);
+  position:fixed;
+  top:0;
+  left:-320px;
+  transition:0.5s ease;
+  padding-top:20px;
+  z-index:2000;
+  overflow-y:auto;
+  box-shadow:8px 0 30px rgba(0,0,0,0.3);
+}
+
+.sidebar.active{
+  left:0;
+}
+
+.close-btn{
+  color:white;
+  font-size:34px;
+  text-align:right;
+  padding-right:25px;
+  cursor:pointer;
+  transition:0.3s;
+}
+
+.close-btn:hover{
+  color:#93c5fd;
+  transform:scale(1.1);
+}
+
+.sidebar h2{
+  color:white;
+  text-align:center;
+  margin:20px 0;
+  font-size:28px;
+  letter-spacing:1px;
+}
+
+.sidebar button{
+  width:88%;
+  margin:14px auto;
+  display:block;
+  padding:15px;
+  border:none;
+  border-radius:14px;
+  cursor:pointer;
+  background:rgba(255,255,255,0.1);
+  color:white;
+  font-size:15px;
+  font-weight:600;
+  transition:0.4s;
+  backdrop-filter:blur(8px);
+}
+
+.sidebar button:hover{
+  background:#3b82f6;
+  transform:translateX(8px);
+  box-shadow:0 8px 20px rgba(59,130,246,0.4);
+}
+
+/* PAGE */
+
+.page{
+  display:none;
+  padding:30px;
+  animation:fadeIn 0.6s ease;
+}
+
+.active-page{
+  display:block;
+}
+
+@keyframes fadeIn{
+  from{
+    opacity:0;
+    transform:translateY(20px);
+  }
+  to{
+    opacity:1;
+    transform:translateY(0);
+  }
+}
+
+/* DASHBOARD */
+
+.dashboard{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+  gap:30px;
+  margin-bottom:40px;
+}
+
+.card{
+  background:rgba(255,255,255,0.8);
+  backdrop-filter:blur(15px);
+  padding:35px;
+  border-radius:25px;
+  text-align:center;
+  box-shadow:0 10px 30px rgba(0,0,0,0.08);
+  transition:0.4s ease;
+  position:relative;
+  overflow:hidden;
+}
+
+.card::before{
+  content:'';
+  position:absolute;
+  top:0;
+  left:0;
+  width:100%;
+  height:7px;
+  background:linear-gradient(90deg,#2563eb,#60a5fa,#93c5fd);
+}
+
+.card:hover{
+  transform:translateY(-10px) scale(1.02);
+  box-shadow:0 20px 40px rgba(37,99,235,0.2);
+}
+
+.card h2{
+  color:#2563eb;
+  margin-bottom:15px;
+  font-size:24px;
+}
+
+.card p{
+  font-size:42px;
+  font-weight:700;
+  color:#0f172a;
+}
+
+/* FORM */
+
+.form-container{
+  background:rgba(255,255,255,0.85);
+  backdrop-filter:blur(12px);
+  padding:30px;
+  border-radius:25px;
+  margin-bottom:35px;
+  box-shadow:0 10px 30px rgba(0,0,0,0.08);
+  border:1px solid rgba(255,255,255,0.3);
+}
+
+.form-container h2,
+.form-container h3{
+  color:#1e3a8a;
+  margin-bottom:20px;
+  font-size:26px;
+}
+
+.form-container input{
+  padding:15px;
+  margin:10px;
+  width:240px;
+  border:1px solid #cbd5e1;
+  border-radius:12px;
+  outline:none;
+  transition:0.3s;
+  font-size:15px;
+  background:white;
+}
+
+.form-container input:focus{
+  border-color:#2563eb;
+  box-shadow:0 0 12px rgba(37,99,235,0.3);
+  transform:scale(1.02);
+}
+
+.form-container button{
+  padding:15px 24px;
+  border:none;
+  border-radius:12px;
+  background:linear-gradient(135deg,#2563eb,#1d4ed8);
+  color:white;
+  cursor:pointer;
+  font-size:15px;
+  font-weight:600;
+  transition:0.3s;
+}
+
+.form-container button:hover{
+  transform:translateY(-3px);
+  box-shadow:0 10px 25px rgba(37,99,235,0.4);
+}
+
+/* TABLE */
+
+table{
+  width:100%;
+  border-collapse:collapse;
+  margin-top:25px;
+  background:white;
+  border-radius:20px;
+  overflow:hidden;
+  box-shadow:0 10px 30px rgba(0,0,0,0.08);
+}
+
+table th{
+  background:linear-gradient(135deg,#2563eb,#1d4ed8);
+  color:white;
+  padding:18px;
+  font-size:15px;
+  letter-spacing:0.5px;
+}
+
+table td{
+  padding:16px;
+  border-bottom:1px solid #e5e7eb;
+  transition:0.2s;
+  text-align:center;
+}
+
+table tr:hover{
+  background:#eff6ff;
+}
+
+table tr:nth-child(even){
+  background:#f8fafc;
+}
+
+/* DELETE BUTTON */
+
+.delete-btn{
+  background:linear-gradient(135deg,#ef4444,#dc2626);
+  color:white;
+  padding:10px 15px;
+  border:none;
+  border-radius:10px;
+  cursor:pointer;
+  transition:0.3s;
+  font-weight:600;
+}
+
+.delete-btn:hover{
+  transform:scale(1.08);
+  box-shadow:0 8px 20px rgba(239,68,68,0.3);
+}
+
+/* SEARCH BOX */
+
+#searchInput{
+  width:340px;
+  max-width:100%;
+}
+
+/* SCROLLBAR */
+
+::-webkit-scrollbar{
+  width:10px;
+}
+
+::-webkit-scrollbar-thumb{
+  background:linear-gradient(#2563eb,#60a5fa);
+  border-radius:20px;
+}
+
+::-webkit-scrollbar-track{
+  background:#dbeafe;
+}
+
+/* RESPONSIVE */
+
+@media(max-width:768px){
+
+  header h1{
+    font-size:24px;
+    text-align:center;
+  }
+
+  .dashboard{
+    grid-template-columns:1fr;
+  }
+
+  .form-container input{
+    width:100%;
+    margin:10px 0;
+  }
+
+  table{
+    font-size:12px;
+  }
+
+  table th,
+  table td{
+    padding:10px;
+  }
+
+  .sidebar{
+    width:270px;
+  }
+
+  .menu-icon{
+    right:20px;
+  }
+
+  .page{
+    padding:15px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+
+  <h1>Student Management System</h1>
+
+  <div class="menu-icon" onclick="toggleMenu()">
+    ☰
+  </div>
+
+</header>
+
+<!-- SIDEBAR -->
+
+<div class="sidebar" id="sidebar">
+
+  <div class="close-btn" onclick="toggleMenu()">
+    ✖
+  </div>
+
+  <h2>Departments</h2>
+
+  <button onclick="showPage('studentsPage')">
+    All Students
+  </button>
+
+  <button onclick="showDepartment('Management Department')">
+    Management Department
+  </button>
+
+  <button onclick="showDepartment('Pharmaceutical Department')">
+    Pharmaceutical Department
+  </button>
+
+  <button onclick="showDepartment(`Art's and Humanities Department`)">
+    Art's & Humanities
+  </button>
+
+  <button onclick="showDepartment('Computer Application Department')">
+    Computer Application
+  </button>
+
+  <button onclick="showDepartment('Law Department')">
+    Law Department
+  </button>
+
+  <button onclick="showDepartment('Journalism and Mass Communication Department')">
+    Journalism & Mass Communication
+  </button>
+
+</div>
+
+<!-- STUDENTS PAGE -->
+
+<div id="studentsPage" class="page active-page">
+
+  <div class="dashboard">
+
+    <div class="card">
+      <h2>Total Students</h2>
+      <p id="totalStudents"></p>
+    </div>
+
+    <div class="card">
+      <h2>Total Departments</h2>
+      <p id="totalDepartments"></p>
+    </div>
+
+    <div class="card">
+      <h2>Total Courses</h2>
+      <p id="totalCourses"></p>
+    </div>
+
+  </div>
+
+  <!-- SEARCH -->
+
+  <div class="form-container">
+
+    <h2>
+      Search Student
+    </h2>
+
+    <input
+      type="text"
+      id="searchInput"
+      placeholder="Enter Student Name or ID"
+      onkeyup="searchStudents()"
+    >
+
+  </div>
+
+  <div id="departmentContainer"></div>
+
+</div>
+
+<script>
+
+// MENU
+
+function toggleMenu(){
+
+  document.getElementById('sidebar')
+    .classList.toggle('active');
+}
+
+// PAGE
+
+function showPage(pageId){
+
+  const pages = document.querySelectorAll('.page');
+
+  pages.forEach(page=>{
+    page.classList.remove('active-page');
+  });
+
+  document.getElementById(pageId)
+    .classList.add('active-page');
+
+  toggleMenu();
+
+  renderDepartments();
+}
+
+// SHOW DEPARTMENT
+
+function showDepartment(departmentName){
+
+  const pages = document.querySelectorAll('.page');
+
+  pages.forEach(page=>{
+    page.classList.remove('active-page');
+  });
+
+  document.getElementById('studentsPage')
+    .classList.add('active-page');
+
+  toggleMenu();
+
+  renderDepartments(departmentName);
+}
+
+// SEARCH
+
+function searchStudents(){
+
+  const searchValue =
+    document.getElementById('searchInput')
+    .value
+    .toLowerCase();
+
+  const tables = document.querySelectorAll("tbody tr");
+
+  tables.forEach(row => {
+
+    const rowText =
+      row.innerText.toLowerCase();
+
+    if(rowText.includes(searchValue)){
+
+      row.style.display = "";
+
+    } else {
+
+      row.style.display = "none";
+    }
+
+  });
+
+}
+
+// DEPARTMENTS
+
+const departments = [
+
+  {
+    name:'Management Department',
+    courses:['BBA','MBA']
+  },
+
+  {
+    name:'Pharmaceutical Department',
+    courses:['B Pharmacy','D Pharmacy','M Pharmacy']
+  },
+
+  {
+    name:"Art's and Humanities Department",
+    courses:['BA','MA']
+  },
+
+  {
+    name:'Computer Application Department',
+    courses:['BCA','MCA']
+  },
+
+  {
+    name:'Law Department',
+    courses:['BA LLB','BBA LLB']
+  },
+
+  {
+    name:'Journalism and Mass Communication Department',
+    courses:['BJMC','BMC','BMM']
+  }
+
+];
+
+// STUDENTS
+
+const students = [];
+
+departments.forEach((department,deptIndex)=>{
+
+  department.courses.forEach((course,courseIndex)=>{
+
+    for(let i=1;i<=100;i++){
+
+      students.push({
+
+        id:'ST'+deptIndex+courseIndex+i,
+
+        name:course+' Student '+i,
+
+        course:course,
+
+        department:department.name,
+
+        year:((i%3)+1)+' Year'
+
+      });
+    }
+  });
+});
+
+// RENDER
+
+function renderDepartments(selectedDepartment=null){
+
+  const container =
+    document.getElementById('departmentContainer');
+
+  container.innerHTML='';
+
+  document.getElementById('totalStudents')
+    .innerText = students.length;
+
+  document.getElementById('totalDepartments')
+    .innerText = departments.length;
+
+  let courseCount = 0;
+
+  departments.forEach(d=>{
+    courseCount += d.courses.length;
+  });
+
+  document.getElementById('totalCourses')
+    .innerText = courseCount;
+
+  departments.forEach(department=>{
+
+    if(selectedDepartment &&
+      department.name !== selectedDepartment){
+      return;
+    }
+
+    let coursesHTML='';
+
+    department.courses.forEach(course=>{
+
+      const filteredStudents =
+        students.filter(student =>
+          student.course === course
+        );
+
+      let rows='';
+
+      filteredStudents.forEach(student=>{
+
+        rows += `
+          <tr>
+            <td>${student.id}</td>
+            <td>${student.name}</td>
+            <td>${student.course}</td>
+            <td>${student.year}</td>
+
+            <td>
+              <button class="delete-btn"
+              onclick="deleteStudent('${student.id}')">
+                Delete
+              </button>
+            </td>
+          </tr>
+        `;
+      });
+
+      coursesHTML += `
+
+        <div class="form-container">
+
+          <div class="dashboard">
+
+            <div class="card">
+              <h2>${course}</h2>
+              <p>${filteredStudents.length}</p>
+            </div>
+
+          </div>
+
+          <h3>
+            Add ${course} Student
+          </h3>
+
+          <input type="text"
+          id="${course}-name"
+          placeholder="Student Name">
+
+          <input type="text"
+          id="${course}-year"
+          placeholder="Year">
+
+          <button
+          onclick="addStudent('${department.name}','${course}')">
+            Add Student
+          </button>
+
+          <table>
+
+            <thead>
+
+              <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Course</th>
+                <th>Year</th>
+                <th>Action</th>
+              </tr>
+
+            </thead>
+
+            <tbody>
+
+              ${rows}
+
+            </tbody>
+
+          </table>
+
+        </div>
+
+      `;
+    });
+
+    container.innerHTML += `
+
+      <div style="margin-bottom:40px;">
+        ${coursesHTML}
+      </div>
+
+    `;
+  });
+}
+
+// ADD STUDENT
+
+function addStudent(department,course){
+
+  const name =
+    document.getElementById(`${course}-name`).value;
+
+  const year =
+    document.getElementById(`${course}-year`).value;
+
+  if(name==='' || year===''){
+
+    alert('Please fill all fields');
+
+    return;
+  }
+
+  students.push({
+
+    id:'ST'+Math.floor(Math.random()*100000),
+
+    name:name,
+
+    course:course,
+
+    department:department,
+
+    year:year
+
+  });
+
+  renderDepartments();
+}
+
+// DELETE STUDENT
+
+function deleteStudent(studentId){
+
+  const index =
+    students.findIndex(student =>
+      student.id === studentId
+    );
+
+  if(index !== -1){
+    students.splice(index,1);
+  }
+
+  renderDepartments();
+}
+
+renderDepartments();
+
+</script>
+
+</body>
+</html>
